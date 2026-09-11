@@ -56,25 +56,61 @@ DEFAULT_CALORIES = 2000
 
 def resolve_api_key() -> str:
     """
-    Scans environment and .env for Gemini API key under multiple common alias names.
+    Scans streamlit session state, streamlit secrets, environment, and .env for Gemini API key.
+    Ensures seamless operation on local machines, mobile devices, and Streamlit Community Cloud.
     """
+    # 1. Check user override in active session
+    try:
+        import streamlit as st
+        if hasattr(st, "session_state") and "api_key_override" in st.session_state:
+            override = str(st.session_state.api_key_override).strip()
+            if override:
+                return override
+    except Exception:
+        pass
+
     candidates = [
         "GEMINI_API_KEY",
         "GOOGLE_API_KEY",
         "Career_Guidance_Chatbot",
-        "AI_API_KEY"
+        "AI_API_KEY",
+        "GEMINI_KEY"
     ]
+
+    # 2. Check Streamlit Cloud st.secrets
+    try:
+        import streamlit as st
+        if hasattr(st, "secrets"):
+            for key in candidates:
+                if key in st.secrets and str(st.secrets[key]).strip():
+                    return str(st.secrets[key]).strip()
+    except Exception:
+        pass
+
+    # 3. Check os.environ and .env
     for key in candidates:
         val = os.getenv(key)
         if val and val.strip():
             return val.strip()
+
     return ""
 
 def resolve_mongo_uri() -> str:
     """
-    Returns configured MONGO_URI, falling back to local MongoDB instance.
+    Returns configured MONGO_URI, checking st.secrets, environment, or falling back to local MongoDB.
     """
+    # Check Streamlit Cloud st.secrets
+    try:
+        import streamlit as st
+        if hasattr(st, "secrets"):
+            for key in ["MONGO_URI", "MONGODB_URI"]:
+                if key in st.secrets and str(st.secrets[key]).strip():
+                    return str(st.secrets[key]).strip()
+    except Exception:
+        pass
+
     uri = os.getenv("MONGO_URI") or os.getenv("MONGODB_URI")
     if uri and uri.strip():
         return uri.strip()
     return DEFAULT_MONGO_URI
+

@@ -77,18 +77,21 @@ elif active_view == "vision":
         preference=sidebar_data["preference"]
     )
 
-# 6. Bottom Navigation Dock (Reference Images 1 & 2)
-st.markdown("<br><hr style='border-color: rgba(255,255,255,0.07); margin: 25px 0 15px 0;'>", unsafe_allow_html=True)
-dock_c1, dock_c2, dock_c3 = st.columns(3)
-with dock_c1:
-    if st.button("🏠 Home", key="dock_home", use_container_width=True, type="primary" if active_view == "home" else "secondary"):
-        st.session_state.current_view = "home"
-        st.rerun()
-with dock_c2:
-    if st.button("💬 Chat", key="dock_chat", use_container_width=True, type="primary" if active_view == "chat" else "secondary"):
-        st.session_state.current_view = "chat"
-        st.rerun()
-with dock_c3:
-    if st.button("📸 Vision Scan", key="dock_vis", use_container_width=True, type="primary" if active_view == "vision" else "secondary"):
-        st.session_state.current_view = "vision"
-        st.rerun()
+# 6. Bottom Navigation Dock (Rendered on Home & Vision screens)
+if active_view != "chat":
+    st.markdown("<br><div class='dock-container'>", unsafe_allow_html=True)
+    dock_c1, dock_c2, dock_c3 = st.columns(3, gap="small")
+    with dock_c1:
+        if st.button("🏠 Home", key="dock_home", use_container_width=True, type="primary" if active_view == "home" else "secondary"):
+            st.session_state.current_view = "home"
+            st.rerun()
+    with dock_c2:
+        if st.button("💬 Chat", key="dock_chat", use_container_width=True, type="primary" if active_view == "chat" else "secondary"):
+            st.session_state.current_view = "chat"
+            st.rerun()
+    with dock_c3:
+        if st.button("📸 Vision Scan", key="dock_vis", use_container_width=True, type="primary" if active_view == "vision" else "secondary"):
+            st.session_state.current_view = "vision"
+            st.rerun()
+    st.markdown("</div>", unsafe_allow_html=True)
+

@@ -480,6 +480,85 @@ GLOBAL_CSS = """
         transform: translateY(-2px) !important;
         box-shadow: 0 8px 24px rgba(16, 185, 129, 0.5) !important;
     }
+
+    /* Mobile Responsive Optimizations (< 768px) */
+    @media (max-width: 768px) {
+        .main .block-container {
+            padding-left: 0.6rem !important;
+            padding-right: 0.6rem !important;
+            padding-top: 0.4rem !important;
+            padding-bottom: 5.5rem !important;
+        }
+
+        /* Top Bar navigation keeping columns strictly side-by-side */
+        .chat-top-bar-wrapper [data-testid="stHorizontalBlock"] {
+            display: flex !important;
+            flex-direction: row !important;
+            flex-wrap: nowrap !important;
+            align-items: center !important;
+            gap: 4px !important;
+        }
+        .chat-top-bar-wrapper [data-testid="column"] {
+            min-width: 0 !important;
+        }
+        .chat-top-bar-wrapper button {
+            padding: 6px 4px !important;
+            font-size: 0.8rem !important;
+        }
+
+        /* Dock container keeping buttons strictly side-by-side on mobile */
+        .dock-container [data-testid="stHorizontalBlock"] {
+            display: flex !important;
+            flex-direction: row !important;
+            flex-wrap: nowrap !important;
+            gap: 6px !important;
+        }
+        .dock-container [data-testid="column"] {
+            min-width: 0 !important;
+            flex: 1 1 0 !important;
+        }
+        .dock-container .stButton>button {
+            padding: 9px 4px !important;
+            font-size: 0.8rem !important;
+            white-space: nowrap !important;
+        }
+
+        /* Hero card responsiveness */
+        .hero-greeting-card {
+            padding: 16px 18px !important;
+            margin-bottom: 16px !important;
+        }
+        .greeting-main {
+            font-size: 1.4rem !important;
+        }
+        .mascot-avatar-hero {
+            width: 74px !important;
+            height: 74px !important;
+            margin-left: 8px !important;
+        }
+
+        /* Chat bubbles on mobile */
+        .user-bubble-box {
+            max-width: 90% !important;
+            padding: 10px 14px !important;
+            font-size: 0.88rem !important;
+            margin-bottom: 10px !important;
+        }
+        .bot-bubble-box {
+            max-width: 95% !important;
+            padding: 12px 14px !important;
+            font-size: 0.89rem !important;
+            margin-bottom: 12px !important;
+        }
+
+        /* Fix chat input pinning on mobile */
+        [data-testid="stChatInput"] {
+            bottom: 12px !important;
+        }
+        [data-testid="stChatInput"] textarea {
+            font-size: 0.9rem !important;
+        }
+    }
 </style>
 """
 

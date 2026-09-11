@@ -1,32 +1,57 @@
+import time
 import logging
-from pymongo import MongoClient
-from pymongo.errors import ConnectionFailure, ServerSelectionTimeoutError
+
+try:
+    from pymongo import MongoClient
+    from pymongo.errors import ConnectionFailure, ServerSelectionTimeoutError
+except ImportError:
+    MongoClient = None
+
 from config.settings import resolve_mongo_uri, DB_NAME
 
 logger = logging.getLogger(__name__)
 
 _mongo_client = None
+_last_attempt_time = 0.0
+_connection_failed = False
+_COOLDOWN_SECONDS = 90.0  # Cooldown between failed reconnect attempts to prevent UI stalls
 
-def get_mongo_client(timeout_ms: int = 2000):
+def get_mongo_client(timeout_ms: int = 1200, force_retry: bool = False):
     """
-    Returns a cached PyMongo client singleton with short server selection timeout.
+    Returns a cached PyMongo client singleton with cooldown on failures to prevent UI freezing.
     """
-    global _mongo_client
-    if _mongo_client is None:
-        uri = resolve_mongo_uri()
-        try:
-            _mongo_client = MongoClient(
-                uri,
-                serverSelectionTimeoutMS=timeout_ms,
-                connectTimeoutMS=timeout_ms
-            )
-            # Fast ping test
-            _mongo_client.admin.command("ping")
-        except (ConnectionFailure, ServerSelectionTimeoutError, Exception) as e:
-            logger.warning(f"MongoDB connection failed: {e}")
-            _mongo_client = None
-            return None
-    return _mongo_client
+    global _mongo_client, _last_attempt_time, _connection_failed
+
+    if MongoClient is None:
+        return None
+
+    if _mongo_client is not None:
+        return _mongo_client
+
+
+    now = time.time()
+    if not force_retry and _connection_failed and (now - _last_attempt_time < _COOLDOWN_SECONDS):
+        # Database is offline; immediately return None without stalling Streamlit
+        return None
+
+    _last_attempt_time = now
+    uri = resolve_mongo_uri()
+    try:
+        client = MongoClient(
+            uri,
+            serverSelectionTimeoutMS=timeout_ms,
+            connectTimeoutMS=timeout_ms
+        )
+        # Fast ping test
+        client.admin.command("ping")
+        _mongo_client = client
+        _connection_failed = False
+        return _mongo_client
+    except Exception as e:
+        logger.warning(f"MongoDB connection failed (falling back to in-memory mode): {e}")
+        _mongo_client = None
+        _connection_failed = True
+        return None
 
 def get_db():
     """
@@ -34,18 +59,16 @@ def get_db():
     """
     client = get_mongo_client()
     if client is not None:
-        return client[DB_NAME]
+        try:
+            return client[DB_NAME]
+        except Exception:
+            return None
     return None
 
 def is_db_connected() -> bool:
     """
-    Quickly verifies if MongoDB is reachable.
+    Quickly verifies if MongoDB is reachable without blocking UI.
     """
-    try:
-        client = get_mongo_client(timeout_ms=1000)
-        if client is not None:
-            client.admin.command("ping")
-            return True
-        return False
-    except Exception:
-        return False
+    client = get_mongo_client(timeout_ms=800)
+    return client is not None
+

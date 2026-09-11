@@ -47,7 +47,7 @@ def stream_nutrition_advice(
     # Build conversation contents including recent history (last 10 turns)
     contents = []
     
-    # Context preamble
+    # Context preamble (user -> model)
     contents.append(
         types.Content(
             role="user",
@@ -57,28 +57,51 @@ def stream_nutrition_advice(
     contents.append(
         types.Content(
             role="model",
-            parts=[types.Part.from_text(text=f"Understood! I am TastyTalk, your personalized food & nutrition buddy tailored to your {goal} goal, {preference} diet, and {calorie_target} kcal daily target. What tasty & healthy food can we explore today?")]
+            parts=[types.Part.from_text(text=f"Understood! I am TastyTalk, your personalized food & nutrition coach for {goal}, {preference} diet, and {calorie_target} kcal daily target. How can I assist you today?")]
         )
     )
     
-    # Append recent context
-    recent_history = message_history[-8:] if len(message_history) > 8 else message_history
+    # Sanitize and strictly enforce alternating user/model turns
+    recent_history = message_history[-10:] if len(message_history) > 10 else message_history
+    last_role = "model"
+    
     for msg in recent_history:
-        role = "user" if msg["role"] == "user" else "model"
+        text = str(msg.get("content", "")).strip()
+        # Skip empty strings and error notices
+        if not text or text.startswith("❌") or text.startswith("⚠️"):
+            continue
+            
+        role = "user" if msg.get("role") == "user" else "model"
+        
+        # Enforce alternation: if consecutive same role, skip or combine
+        if role == last_role:
+            continue
+            
         contents.append(
             types.Content(
                 role=role,
-                parts=[types.Part.from_text(text=msg["content"])]
+                parts=[types.Part.from_text(text=text)]
+            )
+        )
+        last_role = role
+        
+    # If the last turn before current prompt was 'user', add a brief acknowledgement so prompt can be 'user'
+    if last_role == "user":
+        contents.append(
+            types.Content(
+                role="model",
+                parts=[types.Part.from_text(text="I'm listening, please go ahead!")]
             )
         )
         
-    # Append current prompt
+    # Append current user prompt
     contents.append(
         types.Content(
             role="user",
             parts=[types.Part.from_text(text=prompt)]
         )
     )
+
     
     last_error = None
     success = False
