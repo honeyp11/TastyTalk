@@ -6,9 +6,9 @@ from frontend.assets_helper import get_mascot_base64
 def get_theme_css(theme: str = "emerald") -> str:
     """
     Generates CSS tailored to the selected theme:
-    - emerald: Cyber Emerald / Teal Neon (Image 1 - GammaBot Style)
-    - violet: Electric Violet / Neon Purple (Image 3 - Personal AI Style)
-    - mint: Mint Glassmorphism (Image 2 - Health AI Style)
+    - emerald: Cyber Emerald / Teal Neon (CareNex & GammaBot Style)
+    - violet: Electric Violet / Neon Purple (Personal AI Style)
+    - mint: Mint Glassmorphism (Health AI Style)
     """
     if theme == "violet":
         primary_color = "#8b5cf6"
@@ -67,209 +67,159 @@ def get_theme_css(theme: str = "emerald") -> str:
         color: #f1f5f9;
     }}
 
-    /* Mobile App Centered Shell */
+    /* Centered Dashboard Layout matching CareNex Reference */
     .main .block-container {{
-        max-width: 680px !important;
+        max-width: 980px !important;
         margin: 0 auto !important;
-        padding-top: 1rem !important;
-        padding-bottom: 5.5rem !important;
+        padding-top: 1.5rem !important;
+        padding-bottom: 5rem !important;
     }}
 
     #MainMenu, footer, header {{visibility: hidden;}}
 
-    /* Welcome / Splash Screen (Reference Image 1 & 3 Screen 1) */
-    .welcome-container {{
-        text-align: center;
-        padding: 30px 15px 10px 15px;
-    }}
-
-    .welcome-mascot-wrapper {{
-        position: relative;
-        width: 140px;
-        height: 140px;
-        margin: 0 auto 20px auto;
-    }}
-
-    .welcome-mascot-halo {{
-        position: absolute;
-        top: -10px;
-        left: -10px;
-        right: -10px;
-        bottom: -10px;
-        border-radius: 50%;
-        background: radial-gradient(circle, {primary_glow} 0%, transparent 70%);
-        animation: pulseHalo 3s ease-in-out infinite;
-    }}
-
-    @keyframes pulseHalo {{
-        0% {{ transform: scale(0.95); opacity: 0.6; }}
-        50% {{ transform: scale(1.15); opacity: 1; }}
-        100% {{ transform: scale(0.95); opacity: 0.6; }}
-    }}
-
-    .welcome-mascot-avatar {{
-        width: 130px;
-        height: 130px;
-        border-radius: 50%;
-        overflow: hidden;
-        border: 3.5px solid {primary_color};
-        box-shadow: 0 0 35px {primary_glow};
-        animation: floatMascot 4s ease-in-out infinite;
-        position: relative;
-        z-index: 2;
-        background: #090d16;
-        margin: 0 auto;
-    }}
-
-    .welcome-mascot-avatar img {{
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }}
-
-    .welcome-badge {{
-        display: inline-block;
-        background: rgba(255, 255, 255, 0.07);
-        border: 1px solid rgba(255, 255, 255, 0.15);
-        color: {accent_color};
-        font-size: 0.76rem;
-        font-weight: 700;
-        letter-spacing: 0.6px;
-        text-transform: uppercase;
-        padding: 4px 14px;
-        border-radius: 20px;
-        margin-bottom: 12px;
-    }}
-
-    .welcome-headline {{
-        font-family: 'Outfit', sans-serif;
-        font-weight: 800;
-        font-size: 2.2rem;
-        line-height: 1.15;
-        color: #ffffff;
-        margin: 0 0 10px 0;
-    }}
-
-    .welcome-gradient-text {{
-        background: linear-gradient(135deg, #ffffff 30%, {accent_color} 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-    }}
-
-    .welcome-description {{
-        font-size: 0.92rem;
-        color: #94a3b8;
-        max-width: 440px;
-        margin: 0 auto 20px auto;
-        line-height: 1.5;
-    }}
-
-    .welcome-features-row {{
-        display: flex;
-        justify-content: center;
-        gap: 8px;
-        flex-wrap: wrap;
-        margin-bottom: 10px;
-    }}
-
-    .welcome-chip {{
-        background: rgba(255, 255, 255, 0.04);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        padding: 5px 12px;
-        border-radius: 20px;
-        font-size: 0.76rem;
-        font-weight: 600;
-        color: #e2e8f0;
-    }}
-
-    /* Top App Bar */
-    .top-app-bar {{
+    /* Top User Status Bar (Matching CareNex Screenshot) */
+    .carenex-user-header {{
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 6px 4px 14px 4px;
-        margin-bottom: 8px;
+        margin-bottom: 20px;
+        padding: 0 4px;
     }}
 
-    .brand-group {{
+    .user-greeting-group {{
         display: flex;
         align-items: center;
-        gap: 10px;
+        gap: 12px;
     }}
 
-    .brand-title {{
+    .user-avatar-circle {{
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(16, 185, 129, 0.25) 0%, rgba(6, 182, 212, 0.1) 100%);
+        border: 2px solid {primary_color};
+        box-shadow: 0 0 14px {primary_glow};
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.25rem;
+    }}
+
+    .user-title-main {{
         font-family: 'Outfit', sans-serif;
+        font-size: 1.28rem;
         font-weight: 800;
-        font-size: 1.35rem;
-        letter-spacing: -0.5px;
         color: #ffffff;
+        line-height: 1.2;
     }}
 
-    .online-indicator {{
+    .user-domain-sub {{
+        font-size: 0.76rem;
+        color: #94a3b8;
+        margin-top: 2px;
+    }}
+
+    .carenex-status-pill {{
         display: inline-flex;
         align-items: center;
-        gap: 5px;
-        background: rgba(255, 255, 255, 0.06);
+        gap: 6px;
+        background: rgba(16, 185, 129, 0.1);
         color: {accent_color};
-        border: 1px solid {primary_glow};
-        padding: 4px 10px;
-        border-radius: 20px;
-        font-size: 0.72rem;
-        font-weight: 700;
-    }}
-
-    .status-dot {{
-        width: 6px;
-        height: 6px;
-        border-radius: 50%;
-        background-color: {primary_color};
-        box-shadow: 0 0 8px {primary_color};
-    }}
-
-    /* Hero Greeting Card (Reference Image 1 & 3 Screen 2) */
-    .hero-greeting-card {{
-        background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.01) 100%);
-        border: 1px solid {primary_glow};
+        border: 1px solid rgba(16, 185, 129, 0.35);
+        padding: 5px 14px;
         border-radius: 24px;
-        padding: 22px 24px;
-        margin-bottom: 20px;
-        backdrop-filter: blur(20px);
-        box-shadow: 0 16px 36px -10px rgba(0, 0, 0, 0.6), 0 0 24px rgba(255, 255, 255, 0.05);
+        font-size: 0.76rem;
+        font-weight: 700;
+        letter-spacing: 0.4px;
+    }}
+
+    /* Hero Banner Card (CareNex Exact Match) */
+    .hero-greeting-card {{
+        background: linear-gradient(135deg, rgba(13, 22, 38, 0.88) 0%, rgba(9, 14, 26, 0.96) 100%);
+        border: 1px solid rgba(16, 185, 129, 0.35);
+        border-radius: 24px;
+        padding: 28px 32px;
+        margin-bottom: 14px;
+        box-shadow: 0 20px 45px -12px rgba(0, 0, 0, 0.7), 0 0 30px rgba(16, 185, 129, 0.12);
         display: flex;
         align-items: center;
         justify-content: space-between;
+        gap: 24px;
+        position: relative;
+        overflow: hidden;
     }}
 
-    .greeting-sub {{
+    .greeting-text-area {{
+        flex: 1;
+        z-index: 2;
+    }}
+
+    .greeting-badge {{
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
         color: {accent_color};
-        font-size: 0.88rem;
-        font-weight: 600;
-        margin-bottom: 4px;
+        font-size: 0.78rem;
+        font-weight: 800;
+        letter-spacing: 0.8px;
+        text-transform: uppercase;
+        margin-bottom: 8px;
     }}
 
     .greeting-main {{
         font-family: 'Outfit', sans-serif;
-        font-size: 1.7rem;
+        font-size: 2.3rem;
         font-weight: 800;
-        line-height: 1.2;
+        line-height: 1.15;
         color: #ffffff;
         margin: 0 0 10px 0;
+        letter-spacing: -0.5px;
+    }}
+
+    .greeting-desc {{
+        font-size: 0.92rem;
+        color: #94a3b8;
+        line-height: 1.55;
+        max-width: 520px;
+        margin-bottom: 14px;
     }}
 
     .greeting-tags {{
         display: flex;
-        gap: 6px;
+        gap: 8px;
         flex-wrap: wrap;
     }}
 
     .tag-pill {{
         background: rgba(255, 255, 255, 0.07);
         border: 1px solid rgba(255, 255, 255, 0.12);
-        padding: 3px 9px;
+        padding: 4px 11px;
         border-radius: 20px;
-        font-size: 0.72rem;
+        font-size: 0.74rem;
         font-weight: 600;
         color: #cbd5e1;
+    }}
+
+    /* Mascot Framed Box on Right (CareNex Screenshot) */
+    .mascot-frame-box {{
+        width: 175px;
+        height: 155px;
+        border-radius: 20px;
+        border: 1.5px solid rgba(16, 185, 129, 0.4);
+        background: radial-gradient(circle at center, rgba(16, 185, 129, 0.12) 0%, rgba(7, 10, 19, 0.8) 100%);
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5), 0 0 25px rgba(16, 185, 129, 0.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        flex-shrink: 0;
+        animation: floatMascot 4s ease-in-out infinite;
+    }}
+
+    .mascot-frame-box img {{
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
     }}
 
     @keyframes floatMascot {{
@@ -278,52 +228,37 @@ def get_theme_css(theme: str = "emerald") -> str:
         100% {{ transform: translateY(0px); }}
     }}
 
-    .mascot-avatar-hero {{
-        width: 95px;
-        height: 95px;
-        border-radius: 50%;
-        overflow: hidden;
-        border: 2.5px solid {primary_color};
-        box-shadow: 0 0 22px {primary_glow};
-        animation: floatMascot 4s ease-in-out infinite;
-        flex-shrink: 0;
-        background: #090d16;
-        margin-left: 10px;
-    }}
-
-    .mascot-avatar-hero img {{
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }}
-
-    /* Bento Grid Action Cards (Reference Image 1 & 3 Screen 2) */
+    /* Section Headers */
     .section-title-row {{
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 12px;
-        margin-top: 6px;
+        margin-bottom: 14px;
+        margin-top: 10px;
     }}
 
     .section-title {{
-        font-size: 1.02rem;
-        font-weight: 700;
-        color: #f1f5f9;
-        margin: 0;
+        font-family: 'Outfit', sans-serif;
+        font-size: 1.25rem;
+        font-weight: 800;
+        color: #ffffff;
+        display: flex;
+        align-items: center;
+        gap: 8px;
     }}
 
     .see-all-link {{
         color: {accent_color};
-        font-size: 0.8rem;
+        font-size: 0.82rem;
         font-weight: 600;
     }}
 
+    /* Bento Grid Action Cards (CareNex & Image 1) */
     .bento-card {{
         background: rgba(255, 255, 255, 0.035);
         border: 1px solid rgba(255, 255, 255, 0.08);
         border-radius: 18px;
-        padding: 16px 18px;
+        padding: 18px 20px;
         transition: all 0.25s ease;
         display: flex;
         flex-direction: column;
@@ -350,17 +285,17 @@ def get_theme_css(theme: str = "emerald") -> str:
     }}
 
     .bento-icon {{
-        font-size: 1.4rem;
+        font-size: 1.45rem;
     }}
 
     .bento-arrow {{
         color: {accent_color};
-        font-size: 1.1rem;
+        font-size: 1.15rem;
         font-weight: 700;
     }}
 
     .bento-label {{
-        font-size: 0.95rem;
+        font-size: 1.02rem;
         font-weight: 700;
         color: #ffffff;
         margin-top: 8px;
@@ -368,73 +303,9 @@ def get_theme_css(theme: str = "emerald") -> str:
     }}
 
     .bento-sub {{
-        font-size: 0.72rem;
+        font-size: 0.76rem;
         color: #94a3b8;
         margin-top: 2px;
-    }}
-
-    /* Health Overview Gauge Card (Reference Image 2 Screen 1) */
-    .health-gauge-card {{
-        background: rgba(255, 255, 255, 0.03);
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        border-radius: 20px;
-        padding: 16px 20px;
-        margin: 18px 0;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 12px;
-    }}
-
-    .gauge-metrics {{
-        display: flex;
-        gap: 16px;
-        flex-wrap: wrap;
-    }}
-
-    .metric-item {{
-        display: flex;
-        flex-direction: column;
-    }}
-
-    .metric-label {{
-        font-size: 0.7rem;
-        color: #94a3b8;
-        font-weight: 600;
-        text-transform: uppercase;
-    }}
-
-    .metric-val {{
-        font-size: 1.1rem;
-        font-weight: 800;
-        color: {accent_color};
-    }}
-
-    .score-badge-circle {{
-        width: 68px;
-        height: 68px;
-        border-radius: 50%;
-        border: 3.5px solid {primary_color};
-        box-shadow: 0 0 16px {primary_glow};
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        flex-shrink: 0;
-        background: rgba(0, 0, 0, 0.25);
-    }}
-
-    .score-num {{
-        font-size: 1.25rem;
-        font-weight: 800;
-        color: #ffffff;
-        line-height: 1;
-    }}
-
-    .score-denom {{
-        font-size: 0.62rem;
-        color: {accent_color};
-        font-weight: 600;
     }}
 
     /* History Chat Rows */
@@ -442,7 +313,7 @@ def get_theme_css(theme: str = "emerald") -> str:
         background: rgba(255, 255, 255, 0.025);
         border: 1px solid rgba(255, 255, 255, 0.06);
         border-radius: 16px;
-        padding: 10px 14px;
+        padding: 12px 16px;
         margin-bottom: 8px;
         display: flex;
         align-items: center;
@@ -452,20 +323,20 @@ def get_theme_css(theme: str = "emerald") -> str:
     .history-left {{
         display: flex;
         align-items: center;
-        gap: 10px;
+        gap: 12px;
         min-width: 0;
     }}
 
     .history-avatar {{
-        width: 36px;
-        height: 36px;
+        width: 38px;
+        height: 38px;
         border-radius: 50%;
         background: rgba(255, 255, 255, 0.06);
         border: 1.5px solid {primary_color};
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 1rem;
+        font-size: 1.05rem;
         flex-shrink: 0;
     }}
 
@@ -475,7 +346,7 @@ def get_theme_css(theme: str = "emerald") -> str:
 
     .history-title {{
         font-weight: 700;
-        font-size: 0.88rem;
+        font-size: 0.92rem;
         color: #f1f5f9;
         white-space: nowrap;
         overflow: hidden;
@@ -483,22 +354,22 @@ def get_theme_css(theme: str = "emerald") -> str:
     }}
 
     .history-meta {{
-        font-size: 0.72rem;
+        font-size: 0.74rem;
         color: #64748b;
     }}
 
-    /* Message Bubbles (Matching Reference Image 1 & 3 Screen 3) */
+    /* Message Bubbles */
     .user-bubble-box {{
         background: #141c2d;
         border: 1px solid rgba(255, 255, 255, 0.1);
         border-radius: 18px 18px 4px 18px;
-        padding: 12px 16px;
+        padding: 12px 18px;
         color: #f8fafc;
         max-width: 82%;
         margin-left: auto;
         margin-bottom: 12px;
-        font-size: 0.92rem;
-        line-height: 1.45;
+        font-size: 0.93rem;
+        line-height: 1.5;
         box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
     }}
 
@@ -506,13 +377,13 @@ def get_theme_css(theme: str = "emerald") -> str:
         background: {bot_bubble_bg};
         border: 1px solid {bot_bubble_border};
         border-radius: 18px 18px 18px 4px;
-        padding: 15px 18px;
+        padding: 16px 20px;
         color: #ffffff;
         max-width: 88%;
         margin-right: auto;
         margin-bottom: 14px;
-        font-size: 0.93rem;
-        line-height: 1.5;
+        font-size: 0.94rem;
+        line-height: 1.55;
         box-shadow: {bot_bubble_shadow};
     }}
 
@@ -520,7 +391,7 @@ def get_theme_css(theme: str = "emerald") -> str:
         width: 100%;
         border-collapse: collapse;
         margin: 10px 0;
-        font-size: 0.84rem;
+        font-size: 0.85rem;
     }}
 
     .bot-bubble-box th, .bot-bubble-box td {{
@@ -561,60 +432,45 @@ def get_theme_css(theme: str = "emerald") -> str:
             padding-bottom: 5.5rem !important;
         }}
 
-        .chat-top-bar-wrapper [data-testid="stHorizontalBlock"] {{
-            display: flex !important;
-            flex-direction: row !important;
-            flex-wrap: nowrap !important;
-            align-items: center !important;
-            gap: 4px !important;
-        }}
-        .chat-top-bar-wrapper [data-testid="column"] {{
-            min-width: 0 !important;
+        .hero-greeting-card {{
+            padding: 18px 20px !important;
+            flex-direction: column !important;
+            text-align: left !important;
         }}
 
+        .greeting-main {{
+            font-size: 1.6rem !important;
+        }}
+
+        .mascot-frame-box {{
+            width: 100% !important;
+            height: 130px !important;
+        }}
+
+        .chat-top-bar-wrapper [data-testid="stHorizontalBlock"],
         .dock-container [data-testid="stHorizontalBlock"] {{
             display: flex !important;
             flex-direction: row !important;
             flex-wrap: nowrap !important;
             gap: 4px !important;
         }}
+
         .dock-container [data-testid="column"] {{
             min-width: 0 !important;
             flex: 1 1 0 !important;
         }}
+
         .dock-container .stButton>button {{
             padding: 8px 2px !important;
             font-size: 0.78rem !important;
             white-space: nowrap !important;
         }}
 
-        .hero-greeting-card {{
-            padding: 16px 18px !important;
-            margin-bottom: 16px !important;
-        }}
-        .greeting-main {{
-            font-size: 1.35rem !important;
-        }}
-        .mascot-avatar-hero {{
-            width: 72px !important;
-            height: 72px !important;
-        }}
-
         .user-bubble-box {{
             max-width: 90% !important;
-            padding: 10px 14px !important;
-            font-size: 0.88rem !important;
-            margin-bottom: 10px !important;
         }}
         .bot-bubble-box {{
             max-width: 95% !important;
-            padding: 12px 14px !important;
-            font-size: 0.89rem !important;
-            margin-bottom: 12px !important;
-        }}
-
-        [data-testid="stChatInput"] {{
-            bottom: 10px !important;
         }}
     }}
 </style>
