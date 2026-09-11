@@ -37,7 +37,8 @@ def render_sidebar():
         view_options = {
             "🏠 Home Dashboard": "home",
             "💬 TastyTalk Chat": "chat",
-            "📸 Food Vision Scanner": "vision"
+            "📸 Food Vision Scanner": "vision",
+            "👋 Welcome Screen": "welcome"
         }
         
         # Determine current view index
@@ -57,7 +58,33 @@ def render_sidebar():
         )
         st.session_state.current_view = view_options[selected_label]
 
+        # Theme Selector (Image 1, 2, 3 Aesthetics)
         st.markdown("---")
+        st.markdown("#### 🎨 Visual Theme")
+        theme_map = {
+            "🥑 Cyber Emerald (Image 1)": "emerald",
+            "💜 Electric Violet (Image 3)": "violet",
+            "🌿 Mint Glass (Image 2)": "mint"
+        }
+        curr_theme_code = st.session_state.get("app_theme", "emerald")
+        theme_idx = 0
+        for i, val in enumerate(theme_map.values()):
+            if val == curr_theme_code:
+                theme_idx = i
+                break
+        selected_theme_label = st.selectbox(
+            "Theme",
+            list(theme_map.keys()),
+            index=theme_idx,
+            label_visibility="collapsed"
+        )
+        new_theme = theme_map[selected_theme_label]
+        if new_theme != st.session_state.get("app_theme"):
+            st.session_state.app_theme = new_theme
+            st.rerun()
+
+        st.markdown("---")
+
 
         # Action: New Consultation Button
         if st.button("➕ New Consultation", use_container_width=True, type="primary"):

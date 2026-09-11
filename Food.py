@@ -9,6 +9,7 @@ import backend.vision_service
 import backend.export_service
 import frontend.styles
 import frontend.components.sidebar
+import frontend.components.welcome_view
 import frontend.components.home_view
 import frontend.components.chat_view
 import frontend.components.vision_view
@@ -19,12 +20,14 @@ importlib.reload(backend.vision_service)
 importlib.reload(backend.export_service)
 importlib.reload(frontend.styles)
 importlib.reload(frontend.components.sidebar)
+importlib.reload(frontend.components.welcome_view)
 importlib.reload(frontend.components.home_view)
 importlib.reload(frontend.components.chat_view)
 importlib.reload(frontend.components.vision_view)
 
 from frontend.styles import inject_styles
 from frontend.components.sidebar import render_sidebar
+from frontend.components.welcome_view import render_welcome_view
 from frontend.components.home_view import render_home_view
 from frontend.components.chat_view import render_chat_view
 from frontend.components.vision_view import render_vision_view
@@ -37,8 +40,9 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# 2. Inject Modern Dark Glassmorphism CSS
-inject_styles()
+# 2. Inject Active Theme CSS (Cyber Emerald, Electric Violet, or Mint Glass)
+active_theme = st.session_state.get("app_theme", "emerald")
+inject_styles(theme=active_theme)
 
 # 3. Session State Initialization
 if "current_view" not in st.session_state:
@@ -60,7 +64,9 @@ sidebar_data = render_sidebar()
 # 5. Active View Routing
 active_view = sidebar_data.get("current_view", "home")
 
-if active_view == "home":
+if active_view == "welcome":
+    render_welcome_view()
+elif active_view == "home":
     render_home_view()
 elif active_view == "chat":
     render_chat_view(
@@ -77,10 +83,10 @@ elif active_view == "vision":
         preference=sidebar_data["preference"]
     )
 
-# 6. Bottom Navigation Dock (Rendered on Home & Vision screens)
+# 6. Floating Bottom Navigation Dock (Rendered on non-chat screens)
 if active_view != "chat":
     st.markdown("<br><div class='dock-container'>", unsafe_allow_html=True)
-    dock_c1, dock_c2, dock_c3 = st.columns(3, gap="small")
+    dock_c1, dock_c2, dock_c3, dock_c4 = st.columns(4, gap="small")
     with dock_c1:
         if st.button("🏠 Home", key="dock_home", use_container_width=True, type="primary" if active_view == "home" else "secondary"):
             st.session_state.current_view = "home"
@@ -90,8 +96,13 @@ if active_view != "chat":
             st.session_state.current_view = "chat"
             st.rerun()
     with dock_c3:
-        if st.button("📸 Vision Scan", key="dock_vis", use_container_width=True, type="primary" if active_view == "vision" else "secondary"):
+        if st.button("📸 Vision", key="dock_vis", use_container_width=True, type="primary" if active_view == "vision" else "secondary"):
             st.session_state.current_view = "vision"
             st.rerun()
+    with dock_c4:
+        if st.button("✨ Intro", key="dock_intro", use_container_width=True, type="primary" if active_view == "welcome" else "secondary"):
+            st.session_state.current_view = "welcome"
+            st.rerun()
     st.markdown("</div>", unsafe_allow_html=True)
+
 
