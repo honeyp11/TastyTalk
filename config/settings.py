@@ -114,22 +114,3 @@ def resolve_mongo_uri() -> str:
         return uri.strip()
     return DEFAULT_MONGO_URI
 
-def resolve_db_name() -> str:
-    """
-    Returns configured MONGO_DB_NAME with whitespace cleanly stripped.
-    """
-    try:
-        import streamlit as st
-        if hasattr(st, "secrets"):
-            for key in ["MONGO_DB_NAME", "DB_NAME"]:
-                if key in st.secrets and str(st.secrets[key]).strip():
-                    return str(st.secrets[key]).strip()
-    except Exception:
-        pass
-
-    val = os.getenv("MONGO_DB_NAME") or os.getenv("DB_NAME")
-    if val and val.strip():
-        return val.strip()
-    return DB_NAME
-
-

@@ -54,22 +54,17 @@ if "preference" not in st.session_state:
 if "calorie_target" not in st.session_state:
     st.session_state.calorie_target = DEFAULT_CALORIES
 
-from config.settings import PAGE_TITLE, PAGE_ICON, LAYOUT, DEFAULT_CALORIES, resolve_api_key
-
 # 4. Render Sidebar (Profile Controls, API Config, MongoDB History)
 sidebar_data = render_sidebar()
 
 # 5. Active View Routing
 active_view = sidebar_data.get("current_view", "home")
 
-# Freshest API key from override, sidebar, or st.secrets
-active_api_key = sidebar_data.get("api_key") or resolve_api_key()
-
 if active_view == "home":
     render_home_view()
 elif active_view == "chat":
     render_chat_view(
-        api_key=active_api_key,
+        api_key=sidebar_data["api_key"],
         goal=sidebar_data["goal"],
         preference=sidebar_data["preference"],
         calorie_target=sidebar_data["calorie_target"],
@@ -77,11 +72,10 @@ elif active_view == "chat":
     )
 elif active_view == "vision":
     render_vision_view(
-        api_key=active_api_key,
+        api_key=sidebar_data["api_key"],
         goal=sidebar_data["goal"],
         preference=sidebar_data["preference"]
     )
-
 
 # 6. Bottom Navigation Dock (Rendered on Home & Vision screens)
 if active_view != "chat":

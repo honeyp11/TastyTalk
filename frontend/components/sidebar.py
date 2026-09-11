@@ -74,35 +74,36 @@ def render_sidebar():
 
         st.markdown("---")
 
-        # Database History / Sessions List (Available in both MongoDB & In-Memory modes)
-        st.markdown("#### 🕒 Recent Consultations")
-        sessions = list_sessions()
-        
-        if not sessions:
-            st.caption("No consultations recorded yet.")
-        else:
-            for s in sessions[:6]:
-                s_id = s.get("session_id")
-                title = s.get("title", "Consultation")
-                is_active = (s_id == st.session_state.get("active_session_id"))
-                
-                col_btn, col_del = st.columns([0.82, 0.18])
-                with col_btn:
-                    label = f"👉 {title}" if is_active else title
-                    if st.button(label, key=f"side_sess_{s_id}", use_container_width=True):
-                        st.session_state.active_session_id = s_id
-                        st.session_state.current_view = "chat"
-                        st.rerun()
-                with col_del:
-                    if st.button("✕", key=f"side_del_{s_id}", help="Delete consultation"):
-                        delete_session(s_id)
-                        if st.session_state.get("active_session_id") == s_id:
-                            st.session_state.active_session_id = None
-                            st.session_state.messages = []
-                        st.rerun()
-                        
-        st.markdown("---")
-
+        # Database History / Sessions List
+        db_online = is_db_connected()
+        if db_online:
+            st.markdown("#### 🕒 Recent Consultations")
+            sessions = list_sessions()
+            
+            if not sessions:
+                st.caption("No consultations recorded.")
+            else:
+                for s in sessions[:6]:
+                    s_id = s.get("session_id")
+                    title = s.get("title", "Consultation")
+                    is_active = (s_id == st.session_state.get("active_session_id"))
+                    
+                    col_btn, col_del = st.columns([0.82, 0.18])
+                    with col_btn:
+                        label = f"👉 {title}" if is_active else title
+                        if st.button(label, key=f"side_sess_{s_id}", use_container_width=True):
+                            st.session_state.active_session_id = s_id
+                            st.session_state.current_view = "chat"
+                            st.rerun()
+                    with col_del:
+                        if st.button("✕", key=f"side_del_{s_id}", help="Delete consultation"):
+                            delete_session(s_id)
+                            if st.session_state.get("active_session_id") == s_id:
+                                st.session_state.active_session_id = None
+                                st.session_state.messages = []
+                            st.rerun()
+                            
+            st.markdown("---")
 
         # Profile Preferences
         st.markdown("#### 🎯 Personal Profile")
@@ -146,10 +147,12 @@ def render_sidebar():
 
         st.markdown("---")
         # System Diagnostic
+        db_online = is_db_connected()
         if db_online:
             st.caption("🟢 MongoDB: **Connected** (`food_nutrition_db`)")
         else:
-            st.caption("🟡 MongoDB: **Offline** (In-Memory mode)")
+            st.caption("🟡 Cloud Mode: **Active** (In-Memory Session)")
+
 
     return {
         "api_key": api_key,

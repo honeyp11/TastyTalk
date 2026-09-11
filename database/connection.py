@@ -7,7 +7,7 @@ try:
 except ImportError:
     MongoClient = None
 
-from config.settings import resolve_mongo_uri, resolve_db_name, DB_NAME
+from config.settings import resolve_mongo_uri, DB_NAME
 
 logger = logging.getLogger(__name__)
 
@@ -27,6 +27,7 @@ def get_mongo_client(timeout_ms: int = 1200, force_retry: bool = False):
 
     if _mongo_client is not None:
         return _mongo_client
+
 
     now = time.time()
     if not force_retry and _connection_failed and (now - _last_attempt_time < _COOLDOWN_SECONDS):
@@ -59,12 +60,10 @@ def get_db():
     client = get_mongo_client()
     if client is not None:
         try:
-            db_name = resolve_db_name()
-            return client[db_name]
+            return client[DB_NAME]
         except Exception:
             return None
     return None
-
 
 def is_db_connected() -> bool:
     """

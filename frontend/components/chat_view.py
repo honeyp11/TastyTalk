@@ -77,42 +77,26 @@ def render_chat_view(
     st.markdown("</div>", unsafe_allow_html=True)
     st.markdown("<hr style='border-color: rgba(255,255,255,0.08); margin: 6px 0 14px 0;'>", unsafe_allow_html=True)
 
-    # Clean up any legacy error messages from conversation history
-    if "messages" in st.session_state and isinstance(st.session_state.messages, list):
-        st.session_state.messages = [
-            m for m in st.session_state.messages
-            if not str(m.get("content", "")).startswith("⚠️ **Gemini API Key missing")
-            and not str(m.get("content", "")).startswith("⚠️ Gemini API Key missing")
-        ]
-
     # 2. Inline Mobile API Key Setup if Missing
     if not api_key:
         st.markdown("""
-        <div style="background: linear-gradient(135deg, rgba(239, 68, 68, 0.15) 0%, rgba(220, 38, 38, 0.08) 100%); border: 1.5px solid rgba(239, 68, 68, 0.4); border-radius: 16px; padding: 14px 18px; margin-bottom: 14px;">
-            <div style="font-weight: 700; font-size: 0.95rem; color: #fca5a5; margin-bottom: 4px;">🔑 Gemini API Key Required</div>
-            <div style="font-size: 0.8rem; color: #cbd5e1; margin-bottom: 8px;">
-                Paste your Google Gemini API key once below to activate TastyTalk on this device:
+        <div style="background: rgba(239, 68, 68, 0.12); border: 1px solid rgba(239, 68, 68, 0.35); border-radius: 16px; padding: 12px 16px; margin-bottom: 14px;">
+            <div style="font-weight: 700; font-size: 0.92rem; color: #fca5a5; margin-bottom: 3px;">🔑 Gemini API Key Needed</div>
+            <div style="font-size: 0.78rem; color: #cbd5e1; margin-bottom: 8px;">
+                Enter your Google Gemini API key below to enable chat responses on this device:
             </div>
         </div>
         """, unsafe_allow_html=True)
-        col_k1, col_k2 = st.columns([0.72, 0.28], gap="small")
-        with col_k1:
-            inline_key = st.text_input(
-                "Paste Gemini API Key",
-                type="password",
-                placeholder="Paste AIzaSy... or AQ...",
-                key="inline_mobile_key_input",
-                label_visibility="collapsed"
-            )
-        with col_k2:
-            if st.button("🚀 Connect", key="btn_save_inline_key", use_container_width=True, type="primary"):
-                if inline_key and inline_key.strip():
-                    st.session_state.api_key_override = inline_key.strip()
-                    st.rerun()
-        if inline_key and inline_key.strip() and not st.session_state.get("api_key_override"):
+        inline_key = st.text_input(
+            "Paste Gemini API Key",
+            type="password",
+            placeholder="AIzaSy...",
+            key="inline_mobile_key_input",
+            label_visibility="collapsed"
+        )
+        if inline_key and inline_key.strip():
             st.session_state.api_key_override = inline_key.strip()
             st.rerun()
-
 
     # Check for initial prompt passed from home cards
     prompt_to_send = None
@@ -215,14 +199,12 @@ def render_chat_view(
 
         # Stream assistant response
         if not api_key:
-            st.warning("⚠️ **Gemini API Key Required:** Please paste your Gemini API key above and tap '🚀 Connect' to get instant answers.")
-            # Keep prompt queued so once connected, TastyTalk automatically answers
-            st.session_state.initial_prompt = prompt_to_send
-            if st.session_state.messages and st.session_state.messages[-1]["role"] == "user":
-                st.session_state.messages.pop()
+            err_msg = "⚠️ **Gemini API Key missing!** Please enter your key in the sidebar or `.env` file."
+            st.error(err_msg)
+            st.session_state.messages.append({"role": "assistant", "content": err_msg})
+            save_message(session_id, "assistant", err_msg)
         else:
             bot_placeholder = st.empty()
-
             stream_text = ""
             try:
                 for chunk in stream_nutrition_advice(
