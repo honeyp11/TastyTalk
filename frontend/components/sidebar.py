@@ -161,16 +161,8 @@ def render_sidebar():
 
         st.markdown("---")
 
-        # API Key Configuration
-        st.markdown("#### 🔑 AI Engine Config")
-        default_key = resolve_api_key()
-        api_key = st.text_input(
-            "Gemini API Key",
-            value=default_key,
-            type="password",
-            placeholder="AIzaSy...",
-            help="Configured via .env or entered here."
-        )
+        # API Key silently resolved in background from .env or st.secrets (Hidden from UI)
+        api_key = resolve_api_key()
 
         st.markdown("---")
         # System Diagnostic
