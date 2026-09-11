@@ -1,58 +1,57 @@
+import os
+import base64
 import streamlit as st
 from frontend.assets_helper import get_mascot_base64
 
 def get_theme_css(theme: str = "emerald") -> str:
     """
-    Generates professional, enterprise-grade dark UI CSS:
-    - emerald: Cyber Emerald / Vibrant Green (GammaBot / Pro Health aesthetic)
-    - violet: Electric Violet / Deep Purple (Perplexity / Linear aesthetic)
-    - mint: Fresh Teal / Clean Mint Glass (Clinical modern aesthetic)
+    Generates CSS tailored to the selected theme:
+    - emerald: Cyber Emerald / Teal Neon (CareNex & GammaBot Style)
+    - violet: Electric Violet / Neon Purple (Personal AI Style)
+    - mint: Mint Glassmorphism (Health AI Style)
     """
     if theme == "violet":
         primary_color = "#8b5cf6"
         primary_gradient = "linear-gradient(135deg, #8b5cf6 0%, #7c3aed 50%, #6d28d9 100%)"
-        primary_glow = "rgba(139, 92, 246, 0.35)"
+        primary_glow = "rgba(139, 92, 246, 0.4)"
         accent_color = "#a855f7"
-        bg_canvas = """
-            radial-gradient(circle at 50% 0%, rgba(139, 92, 246, 0.12) 0%, transparent 50%),
-            radial-gradient(circle at 100% 100%, rgba(236, 72, 153, 0.05) 0%, transparent 40%),
-            #070611
+        bg_radial = """
+            radial-gradient(circle at 50% 0%, rgba(139, 92, 246, 0.16) 0%, transparent 60%),
+            radial-gradient(circle at 100% 100%, rgba(236, 72, 153, 0.08) 0%, transparent 50%),
+            #080713
         """
-        card_bg = "rgba(22, 18, 42, 0.7)"
-        card_border = "rgba(139, 92, 246, 0.22)"
-        bot_bubble_bg = "linear-gradient(145deg, rgba(30, 24, 58, 0.9) 0%, rgba(20, 16, 42, 0.95) 100%)"
-        bot_bubble_border = "rgba(168, 85, 247, 0.4)"
-        user_bubble_bg = "linear-gradient(145deg, #2d1f4d 0%, #1f1537 100%)"
+        bot_bubble_bg = "linear-gradient(135deg, #7c3aed 0%, #6d28d9 50%, #5b21b6 100%)"
+        bot_bubble_border = "rgba(168, 85, 247, 0.45)"
+        bot_bubble_shadow = "0 8px 24px -4px rgba(139, 92, 246, 0.4)"
+        dock_active_color = "#a855f7"
     elif theme == "mint":
         primary_color = "#14b8a6"
         primary_gradient = "linear-gradient(135deg, #14b8a6 0%, #0d9488 50%, #0f766e 100%)"
-        primary_glow = "rgba(20, 184, 166, 0.35)"
+        primary_glow = "rgba(20, 184, 166, 0.4)"
         accent_color = "#2dd4bf"
-        bg_canvas = """
-            radial-gradient(circle at 50% 0%, rgba(20, 184, 166, 0.12) 0%, transparent 50%),
-            radial-gradient(circle at 100% 100%, rgba(56, 189, 248, 0.05) 0%, transparent 40%),
-            #040d12
+        bg_radial = """
+            radial-gradient(circle at 50% 0%, rgba(20, 184, 166, 0.14) 0%, transparent 60%),
+            radial-gradient(circle at 100% 100%, rgba(56, 189, 248, 0.08) 0%, transparent 50%),
+            #071118
         """
-        card_bg = "rgba(10, 28, 32, 0.7)"
-        card_border = "rgba(20, 184, 166, 0.22)"
-        bot_bubble_bg = "linear-gradient(145deg, rgba(14, 38, 44, 0.9) 0%, rgba(8, 24, 28, 0.95) 100%)"
+        bot_bubble_bg = "linear-gradient(135deg, #0d9488 0%, #0f766e 50%, #115e59 100%)"
         bot_bubble_border = "rgba(45, 212, 191, 0.4)"
-        user_bubble_bg = "linear-gradient(145deg, #134e4a 0%, #0c3330 100%)"
+        bot_bubble_shadow = "0 8px 24px -4px rgba(20, 184, 166, 0.35)"
+        dock_active_color = "#2dd4bf"
     else:  # default: emerald
         primary_color = "#10b981"
         primary_gradient = "linear-gradient(135deg, #10b981 0%, #059669 50%, #047857 100%)"
-        primary_glow = "rgba(16, 185, 129, 0.35)"
+        primary_glow = "rgba(16, 185, 129, 0.4)"
         accent_color = "#34d399"
-        bg_canvas = """
-            radial-gradient(circle at 50% 0%, rgba(16, 185, 129, 0.12) 0%, transparent 50%),
-            radial-gradient(circle at 100% 100%, rgba(6, 182, 212, 0.05) 0%, transparent 40%),
-            #060a12
+        bg_radial = """
+            radial-gradient(circle at 50% 0%, rgba(16, 185, 129, 0.14) 0%, transparent 60%),
+            radial-gradient(circle at 100% 100%, rgba(6, 182, 212, 0.08) 0%, transparent 50%),
+            #070a13
         """
-        card_bg = "rgba(12, 20, 32, 0.7)"
-        card_border = "rgba(16, 185, 129, 0.2)"
-        bot_bubble_bg = "linear-gradient(145deg, rgba(14, 26, 42, 0.9) 0%, rgba(9, 17, 28, 0.95) 100%)"
-        bot_bubble_border = "rgba(52, 211, 153, 0.38)"
-        user_bubble_bg = "linear-gradient(145deg, #0d2822 0%, #071915 100%)"
+        bot_bubble_bg = "linear-gradient(135deg, #059669 0%, #047857 50%, #065f46 100%)"
+        bot_bubble_border = "rgba(52, 211, 153, 0.4)"
+        bot_bubble_shadow = "0 8px 24px -4px rgba(16, 185, 129, 0.35)"
+        dock_active_color = "#10b981"
 
     return f"""
 <style>
@@ -62,175 +61,175 @@ def get_theme_css(theme: str = "emerald") -> str:
         font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
     }}
 
-    /* Global Dark Canvas */
+    /* Dynamic Cyber Canvas */
     .stApp {{
-        background: {bg_canvas} !important;
+        background: {bg_radial} !important;
         color: #f1f5f9;
+    }}
+
+    /* Centered Dashboard Layout matching CareNex Reference */
+    .main .block-container {{
+        max-width: 980px !important;
+        margin: 0 auto !important;
+        padding-top: 1.5rem !important;
+        padding-bottom: 5rem !important;
     }}
 
     #MainMenu, footer, header {{visibility: hidden;}}
 
-    /* Main Spacious & Professional Container */
-    .main .block-container {{
-        max-width: 960px !important;
-        width: 100% !important;
-        margin: 0 auto !important;
-        padding: 1.5rem 1.2rem 4rem 1.2rem !important;
-    }}
-
-    @media (max-width: 768px) {{
-        .main .block-container {{
-            padding: 1rem 0.6rem 3.5rem 0.6rem !important;
-        }}
-    }}
-
-    /* Top Executive App Bar */
-    .pro-app-header {{
+    /* Top User Status Bar (Matching CareNex Screenshot) */
+    .carenex-user-header {{
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 16px 20px;
-        background: {card_bg};
-        border: 1px solid {card_border};
-        border-radius: 20px;
-        backdrop-filter: blur(16px);
-        margin-bottom: 22px;
-        box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.6), 0 0 20px {primary_glow};
+        margin-bottom: 20px;
+        padding: 0 4px;
     }}
 
-    .pro-brand-group {{
+    .user-greeting-group {{
         display: flex;
         align-items: center;
-        gap: 14px;
+        gap: 12px;
     }}
 
-    .pro-brand-avatar {{
-        width: 48px;
-        height: 48px;
-        border-radius: 14px;
-        overflow: hidden;
+    .user-avatar-circle {{
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(16, 185, 129, 0.25) 0%, rgba(6, 182, 212, 0.1) 100%);
         border: 2px solid {primary_color};
-        box-shadow: 0 0 15px {primary_glow};
-        background: #090e1a;
-        flex-shrink: 0;
+        box-shadow: 0 0 14px {primary_glow};
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.25rem;
     }}
 
-    .pro-brand-avatar img {{
+    .user-title-main {{
+        font-family: 'Outfit', sans-serif;
+        font-size: 1.28rem;
+        font-weight: 800;
+        color: #ffffff;
+        line-height: 1.2;
+    }}
+
+    .user-domain-sub {{
+        font-size: 0.76rem;
+        color: #94a3b8;
+        margin-top: 2px;
+    }}
+
+    .carenex-status-pill {{
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: rgba(16, 185, 129, 0.1);
+        color: {accent_color};
+        border: 1px solid rgba(16, 185, 129, 0.35);
+        padding: 5px 14px;
+        border-radius: 24px;
+        font-size: 0.76rem;
+        font-weight: 700;
+        letter-spacing: 0.4px;
+    }}
+
+    /* Hero Banner Card (CareNex Exact Match) */
+    .hero-greeting-card {{
+        background: linear-gradient(135deg, rgba(13, 22, 38, 0.88) 0%, rgba(9, 14, 26, 0.96) 100%);
+        border: 1px solid rgba(16, 185, 129, 0.35);
+        border-radius: 24px;
+        padding: 28px 32px;
+        margin-bottom: 14px;
+        box-shadow: 0 20px 45px -12px rgba(0, 0, 0, 0.7), 0 0 30px rgba(16, 185, 129, 0.12);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 24px;
+        position: relative;
+        overflow: hidden;
+    }}
+
+    .greeting-text-area {{
+        flex: 1;
+        z-index: 2;
+    }}
+
+    .greeting-badge {{
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        color: {accent_color};
+        font-size: 0.78rem;
+        font-weight: 800;
+        letter-spacing: 0.8px;
+        text-transform: uppercase;
+        margin-bottom: 8px;
+    }}
+
+    .greeting-main {{
+        font-family: 'Outfit', sans-serif;
+        font-size: 2.3rem;
+        font-weight: 800;
+        line-height: 1.15;
+        color: #ffffff;
+        margin: 0 0 10px 0;
+        letter-spacing: -0.5px;
+    }}
+
+    .greeting-desc {{
+        font-size: 0.92rem;
+        color: #94a3b8;
+        line-height: 1.55;
+        max-width: 520px;
+        margin-bottom: 14px;
+    }}
+
+    .greeting-tags {{
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+    }}
+
+    .tag-pill {{
+        background: rgba(255, 255, 255, 0.07);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        padding: 4px 11px;
+        border-radius: 20px;
+        font-size: 0.74rem;
+        font-weight: 600;
+        color: #cbd5e1;
+    }}
+
+    /* Mascot Framed Box on Right (CareNex Screenshot) */
+    .mascot-frame-box {{
+        width: 175px;
+        height: 155px;
+        border-radius: 20px;
+        border: 1.5px solid rgba(16, 185, 129, 0.4);
+        background: radial-gradient(circle at center, rgba(16, 185, 129, 0.12) 0%, rgba(7, 10, 19, 0.8) 100%);
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5), 0 0 25px rgba(16, 185, 129, 0.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        flex-shrink: 0;
+        animation: floatMascot 4s ease-in-out infinite;
+    }}
+
+    .mascot-frame-box img {{
         width: 100%;
         height: 100%;
         object-fit: cover;
     }}
 
-    .pro-brand-title {{
-        font-family: 'Outfit', sans-serif;
-        font-weight: 800;
-        font-size: 1.35rem;
-        color: #ffffff;
-        letter-spacing: -0.3px;
-        line-height: 1.2;
+    @keyframes floatMascot {{
+        0% {{ transform: translateY(0px); }}
+        50% {{ transform: translateY(-7px); }}
+        100% {{ transform: translateY(0px); }}
     }}
 
-    .pro-brand-sub {{
-        font-size: 0.78rem;
-        color: #94a3b8;
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        margin-top: 2px;
-    }}
-
-    .status-dot-live {{
-        width: 8px;
-        height: 8px;
-        background: {accent_color};
-        border-radius: 50%;
-        display: inline-block;
-        box-shadow: 0 0 10px {accent_color};
-        animation: pulseDot 2s infinite;
-    }}
-
-    @keyframes pulseDot {{
-        0% {{ transform: scale(0.9); opacity: 0.7; }}
-        50% {{ transform: scale(1.2); opacity: 1; }}
-        100% {{ transform: scale(0.9); opacity: 0.7; }}
-    }}
-
-    .pro-profile-pills {{
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        flex-wrap: wrap;
-    }}
-
-    .pro-pill {{
-        background: rgba(255, 255, 255, 0.05);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: 20px;
-        padding: 5px 12px;
-        font-size: 0.76rem;
-        font-weight: 600;
-        color: #cbd5e1;
-        display: inline-flex;
-        align-items: center;
-        gap: 5px;
-    }}
-
-    .pro-pill strong {{
-        color: {accent_color};
-    }}
-
-    /* Welcome Hero Banner */
-    .pro-hero-banner {{
-        background: {card_bg};
-        border: 1px solid {card_border};
-        border-radius: 22px;
-        padding: 26px 28px;
-        margin-bottom: 24px;
-        position: relative;
-        overflow: hidden;
-        backdrop-filter: blur(16px);
-        box-shadow: 0 12px 35px -8px rgba(0, 0, 0, 0.5), 0 0 25px {primary_glow};
-    }}
-
-    .pro-hero-badge {{
-        display: inline-block;
-        background: rgba(255, 255, 255, 0.06);
-        border: 1px solid {primary_glow};
-        color: {accent_color};
-        font-size: 0.74rem;
-        font-weight: 700;
-        letter-spacing: 0.6px;
-        padding: 4px 12px;
-        border-radius: 20px;
-        margin-bottom: 12px;
-        text-transform: uppercase;
-    }}
-
-    .pro-hero-title {{
-        font-family: 'Outfit', sans-serif;
-        font-weight: 800;
-        font-size: 1.85rem;
-        color: #ffffff;
-        line-height: 1.25;
-        margin-bottom: 10px;
-    }}
-
-    .pro-hero-gradient-text {{
-        background: {primary_gradient};
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-    }}
-
-    .pro-hero-desc {{
-        font-size: 0.92rem;
-        color: #94a3b8;
-        line-height: 1.55;
-        max-width: 680px;
-        margin-bottom: 0;
-    }}
-
-    /* Quick Starters Bento Grid */
-    .starter-section-header {{
+    /* Section Headers */
+    .section-title-row {{
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -238,223 +237,174 @@ def get_theme_css(theme: str = "emerald") -> str:
         margin-top: 10px;
     }}
 
-    .starter-section-title {{
+    .section-title {{
         font-family: 'Outfit', sans-serif;
-        font-size: 1.12rem;
-        font-weight: 700;
+        font-size: 1.25rem;
+        font-weight: 800;
         color: #ffffff;
         display: flex;
         align-items: center;
         gap: 8px;
     }}
 
-    .starter-card {{
-        background: {card_bg};
+    .see-all-link {{
+        color: {accent_color};
+        font-size: 0.82rem;
+        font-weight: 600;
+    }}
+
+    /* Bento Grid Action Cards (CareNex & Image 1) */
+    .bento-card {{
+        background: rgba(255, 255, 255, 0.035);
         border: 1px solid rgba(255, 255, 255, 0.08);
         border-radius: 18px;
         padding: 18px 20px;
-        transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        transition: all 0.25s ease;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
         min-height: 110px;
-        backdrop-filter: blur(12px);
+        margin-bottom: 6px;
     }}
 
-    .starter-card:hover {{
-        border-color: {primary_color};
-        transform: translateY(-3px);
-        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.6), 0 0 18px {primary_glow};
+    .bento-card:hover {{
+        background: rgba(255, 255, 255, 0.06);
+        border-color: {primary_glow};
+        transform: translateY(-2px);
     }}
 
-    .starter-top-row {{
+    .bento-primary {{
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.03) 100%);
+        border: 1px solid {primary_glow};
+    }}
+
+    .bento-top-row {{
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 8px;
     }}
 
-    .starter-icon {{
-        font-size: 1.5rem;
+    .bento-icon {{
+        font-size: 1.45rem;
     }}
 
-    .starter-arrow {{
+    .bento-arrow {{
         color: {accent_color};
-        font-weight: 800;
         font-size: 1.15rem;
-        transition: transform 0.2s;
+        font-weight: 700;
     }}
 
-    .starter-card:hover .starter-arrow {{
-        transform: translate(3px, -3px);
-    }}
-
-    .starter-label {{
-        font-size: 0.96rem;
+    .bento-label {{
+        font-size: 1.02rem;
         font-weight: 700;
         color: #ffffff;
-        margin-bottom: 3px;
+        margin-top: 8px;
+        line-height: 1.25;
     }}
 
-    .starter-sub {{
-        font-size: 0.78rem;
+    .bento-sub {{
+        font-size: 0.76rem;
         color: #94a3b8;
-        line-height: 1.35;
+        margin-top: 2px;
     }}
 
-    /* Trending Topic Chips Row */
-    .trending-chips-wrap {{
+    /* History Chat Rows */
+    .history-row {{
+        background: rgba(255, 255, 255, 0.025);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        border-radius: 16px;
+        padding: 12px 16px;
+        margin-bottom: 8px;
         display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
-        margin-top: 14px;
-        margin-bottom: 24px;
-    }}
-
-    .trending-chip-item {{
-        background: rgba(255, 255, 255, 0.04);
-        border: 1px solid rgba(255, 255, 255, 0.09);
-        border-radius: 20px;
-        padding: 6px 14px;
-        font-size: 0.8rem;
-        font-weight: 600;
-        color: #e2e8f0;
-        display: inline-flex;
         align-items: center;
-        gap: 6px;
-        cursor: pointer;
-        transition: all 0.2s ease;
+        justify-content: space-between;
     }}
 
-    .trending-chip-item:hover {{
-        background: rgba(255, 255, 255, 0.08);
-        border-color: {primary_color};
-        color: #ffffff;
-        transform: translateY(-1px);
-    }}
-
-    /* Chat Messages Layout */
-    .chat-container-wrap {{
+    .history-left {{
         display: flex;
-        flex-direction: column;
-        gap: 16px;
-        margin-bottom: 24px;
+        align-items: center;
+        gap: 12px;
+        min-width: 0;
     }}
 
-    /* User Message Bubble */
-    .user-bubble {{
-        align-self: flex-end;
-        background: {user_bubble_bg};
+    .history-avatar {{
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.06);
+        border: 1.5px solid {primary_color};
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.05rem;
+        flex-shrink: 0;
+    }}
+
+    .history-info {{
+        min-width: 0;
+    }}
+
+    .history-title {{
+        font-weight: 700;
+        font-size: 0.92rem;
+        color: #f1f5f9;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }}
+
+    .history-meta {{
+        font-size: 0.74rem;
+        color: #64748b;
+    }}
+
+    /* Message Bubbles */
+    .user-bubble-box {{
+        background: #141c2d;
         border: 1px solid rgba(255, 255, 255, 0.1);
         border-radius: 18px 18px 4px 18px;
-        padding: 14px 18px;
+        padding: 12px 18px;
         color: #f8fafc;
-        max-width: 80%;
+        max-width: 82%;
         margin-left: auto;
-        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
-        position: relative;
-    }}
-
-    .user-bubble-header {{
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 6px;
-        font-size: 0.74rem;
-        font-weight: 700;
-        color: {accent_color};
-    }}
-
-    .user-bubble-body {{
-        font-size: 0.92rem;
+        margin-bottom: 12px;
+        font-size: 0.93rem;
         line-height: 1.5;
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
     }}
 
-    /* Bot Message Bubble */
-    .bot-bubble {{
-        align-self: flex-start;
+    .bot-bubble-box {{
         background: {bot_bubble_bg};
         border: 1px solid {bot_bubble_border};
         border-radius: 18px 18px 18px 4px;
-        padding: 18px 22px;
-        color: #f8fafc;
-        max-width: 92%;
+        padding: 16px 20px;
+        color: #ffffff;
+        max-width: 88%;
         margin-right: auto;
-        box-shadow: 0 8px 30px -6px rgba(0, 0, 0, 0.5), 0 0 15px {primary_glow};
-        backdrop-filter: blur(16px);
-        position: relative;
+        margin-bottom: 14px;
+        font-size: 0.94rem;
+        line-height: 1.55;
+        box-shadow: {bot_bubble_shadow};
     }}
 
-    .bot-bubble-header {{
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 10px;
-        padding-bottom: 8px;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-    }}
-
-    .bot-brand-tag {{
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        font-weight: 800;
-        font-size: 0.88rem;
-        color: #ffffff;
-    }}
-
-    .bot-brand-pill {{
-        background: {primary_gradient};
-        color: #ffffff;
-        font-size: 0.68rem;
-        font-weight: 800;
-        padding: 2px 8px;
-        border-radius: 12px;
-        letter-spacing: 0.4px;
-    }}
-
-    .bubble-time {{
-        font-size: 0.7rem;
-        color: #94a3b8;
-    }}
-
-    .bot-bubble-body {{
-        font-size: 0.93rem;
-        line-height: 1.6;
-    }}
-
-    .bot-bubble-body p {{
-        margin-bottom: 0.8rem;
-    }}
-
-    .bot-bubble-body strong {{
-        color: {accent_color};
-    }}
-
-    .bot-bubble-body ul, .bot-bubble-body ol {{
-        margin-left: 1.2rem;
-        margin-bottom: 0.8rem;
-    }}
-
-    .bot-bubble-body table {{
+    .bot-bubble-box table {{
         width: 100%;
         border-collapse: collapse;
-        margin: 12px 0;
-        font-size: 0.86rem;
+        margin: 10px 0;
+        font-size: 0.85rem;
     }}
 
-    .bot-bubble-body th, .bot-bubble-body td {{
-        padding: 8px 12px;
-        border: 1px solid rgba(255, 255, 255, 0.1);
+    .bot-bubble-box th, .bot-bubble-box td {{
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        padding: 6px 10px;
         text-align: left;
     }}
 
-    .bot-bubble-body th {{
-        background: rgba(255, 255, 255, 0.06);
-        color: {accent_color};
+    .bot-bubble-box th {{
+        background: rgba(0, 0, 0, 0.25);
     }}
 
-    /* Global Input & Button Overrides */
+    /* Buttons Override */
     .stButton>button {{
         border-radius: 14px !important;
         font-weight: 600 !important;
@@ -473,58 +423,60 @@ def get_theme_css(theme: str = "emerald") -> str:
         box-shadow: 0 8px 24px {primary_glow} !important;
     }}
 
-    button[kind="secondary"] {{
-        background: rgba(255, 255, 255, 0.05) !important;
-        border: 1px solid rgba(255, 255, 255, 0.1) !important;
-        color: #e2e8f0 !important;
-    }}
+    /* Mobile Responsive Optimizations (< 768px) */
+    @media (max-width: 768px) {{
+        .main .block-container {{
+            padding-left: 0.6rem !important;
+            padding-right: 0.6rem !important;
+            padding-top: 0.4rem !important;
+            padding-bottom: 5.5rem !important;
+        }}
 
-    button[kind="secondary"]:hover {{
-        background: rgba(255, 255, 255, 0.09) !important;
-        border-color: {primary_color} !important;
-        color: #ffffff !important;
-    }}
+        .hero-greeting-card {{
+            padding: 18px 20px !important;
+            flex-direction: column !important;
+            text-align: left !important;
+        }}
 
-    [data-testid="stChatInput"] {{
-        margin-top: 14px !important;
-    }}
+        .greeting-main {{
+            font-size: 1.6rem !important;
+        }}
 
-    [data-testid="stChatInput"] textarea {{
-        font-size: 0.92rem !important;
-        border-radius: 16px !important;
-        background: rgba(14, 20, 32, 0.95) !important;
-        border: 1px solid rgba(255, 255, 255, 0.12) !important;
-        color: #ffffff !important;
-    }}
+        .mascot-frame-box {{
+            width: 100% !important;
+            height: 130px !important;
+        }}
 
-    [data-testid="stChatInput"] textarea:focus {{
-        border-color: {primary_color} !important;
-        box-shadow: 0 0 15px {primary_glow} !important;
-    }}
+        .chat-top-bar-wrapper [data-testid="stHorizontalBlock"],
+        .dock-container [data-testid="stHorizontalBlock"] {{
+            display: flex !important;
+            flex-direction: row !important;
+            flex-wrap: nowrap !important;
+            gap: 4px !important;
+        }}
 
-    /* Custom Navigation Tabs */
-    .view-switcher-bar {{
-        display: flex;
-        gap: 10px;
-        margin-bottom: 20px;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-        padding-bottom: 12px;
-    }}
+        .dock-container [data-testid="column"] {{
+            min-width: 0 !important;
+            flex: 1 1 0 !important;
+        }}
 
-    /* Sidebar Clean Styling */
-    [data-testid="stSidebar"] {{
-        background: #090e18 !important;
-        border-right: 1px solid rgba(255, 255, 255, 0.08) !important;
-    }}
+        .dock-container .stButton>button {{
+            padding: 8px 2px !important;
+            font-size: 0.78rem !important;
+            white-space: nowrap !important;
+        }}
 
-    [data-testid="stSidebar"] .stButton>button {{
-        border-radius: 12px !important;
-        font-size: 0.84rem !important;
+        .user-bubble-box {{
+            max-width: 90% !important;
+        }}
+        .bot-bubble-box {{
+            max-width: 95% !important;
+        }}
     }}
 </style>
 """
 
 def inject_styles(theme: str = "emerald"):
-    """Injects high-end, responsive professional CSS into Streamlit."""
+    """Injects high-end mobile-app styled CSS into Streamlit according to active theme."""
     css = get_theme_css(theme)
     st.markdown(css, unsafe_allow_html=True)
