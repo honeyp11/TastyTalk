@@ -1,4 +1,5 @@
-from frontend.styles import inject_styles, get_mascot_base64
+from frontend.styles import inject_styles
+from frontend.assets_helper import get_mascot_base64
 from frontend.components import (
     render_header,
     render_sidebar,
